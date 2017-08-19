@@ -4,17 +4,11 @@ import Recipes from "./Recipes.js"
 import Ingredients from "./Ingredients.js"
 import { Navbar, Nav, NavItem } from "react-bootstrap";
 
-class Schedule extends Component {
-  render() {
-    return <h1>Schedule</h1>;
-  }
-}
-
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      view: <Schedule />
+      view: <Ingredients />
     };
   }
   render() {
@@ -27,14 +21,6 @@ class App extends Component {
             </Navbar.Brand>
           </Navbar.Header>
           <Nav>
-            <NavItem
-              id="scheduleNavButton"
-              eventKey={1}
-              href="#"
-              onClick={() => this.setState({ view: <Schedule /> })}
-            >
-              Schedule
-            </NavItem>
             <NavItem
               id="recipeNavButton"
               eventKey={3}
