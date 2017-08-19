@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./App.css";
-import Inventory from "./Inventory.js"
 import Recipes from "./Recipes.js"
 import Ingredients from "./Ingredients.js"
 import { Navbar, Nav, NavItem } from "react-bootstrap";
@@ -35,14 +34,6 @@ class App extends Component {
               onClick={() => this.setState({ view: <Schedule /> })}
             >
               Schedule
-            </NavItem>
-            <NavItem
-              id="inventoryNavButton"
-              eventKey={2}
-              href="#"
-              onClick={() => this.setState({ view: <Inventory /> })}
-            >
-              Inventory
             </NavItem>
             <NavItem
               id="recipeNavButton"
