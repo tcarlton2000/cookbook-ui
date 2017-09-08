@@ -1,26 +1,27 @@
 import React, { Component } from "react";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
+import fetch from 'isomorphic-fetch'
 
 export default class Recipes extends Component {
 	constructor() {
 		super();
 		this.state = {
 			recipes: [
-				{
-					id: 0,
-					name: "Baked Chicken"
-				},
-				{
-					id: 1,
-					name: "Air Fried Chicken Tenders"
-				},
-				{
-					id: 2,
-					name: "Buffalo Stir Fried Noodles"
-				}
 			]
 		}
 	}
+
+	componentDidMount() {
+		return fetch('/recipes')
+		.then((response) => response.json())
+		.then((responseJson) => {
+			this.setState({recipes: responseJson.recipes})
+		})
+		.catch((error) => {
+		  console.error(error);
+		});
+	}
+
 	render() {
 		return (
 			<div>
