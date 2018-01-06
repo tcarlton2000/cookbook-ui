@@ -1,7 +1,10 @@
 import React from 'react';
 import { mount } from "enzyme"
 import Recipes from './Recipes'
-import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { ListGroup, ListGroupItem} from "react-bootstrap";
+import { doImmediate } from './testUtils'
+
+require('./mockResponses');
 
 describe("Recipes", () => {
   let props;
@@ -17,6 +20,7 @@ describe("Recipes", () => {
 
   beforeEach(() => {
     mountedRecipes = undefined;
+    recipes();
   });
 
   it("always returns a div", () => {
@@ -44,31 +48,72 @@ describe("Recipes", () => {
     });
 
     describe("the rendered ListGroup", () => {
-      beforeEach(() => {
-        recipes().setState({
-          recipes: [
-            {
-              id: 0,
-              name: "Test Item 1"
-            },
-            {
-              id: 1,
-              name: "Test Item 2"
-            }
-          ]
-        })
+      it("contains ListGroupItems", (done) => {
+        doImmediate(done, () => expect(recipes().update().find(ListGroupItem)).toHaveLength(2));
       });
 
-      it("contains ListGroupItems", () => {
-        expect(recipes().find(ListGroupItem).length).toBe(2)
+      it("contains correct text", (done) => {
+        doImmediate(done, () => {
+          expect(recipes().find(ListGroupItem).at(0).text()).toEqual("Page 1, Item 1");
+          expect(recipes().find(ListGroupItem).at(1).text()).toEqual("Page 1, Item 2");
+        });
       });
 
-      it("contains correct text", () => {
-        let listGroup = recipes().find(ListGroup)
-        expect(listGroup.childAt(0).text()).toBe("Test Item 1")
-        expect(listGroup.find(ListGroup).childAt(1).text()).toBe("Test Item 2")
+      describe("Pagination", () => {
+        let paginationRecipes = recipes();
+
+        it("first page should have back button disabled", (done) => {
+          doImmediate(done, () => {
+            expect(paginationRecipes.find('.pager .previous')).toHaveLength(0);
+            expect(paginationRecipes.find('.pager .next')).toHaveLength(1);
+          });
+        });
+
+        it("next button should load second page", (done) => {
+          paginationRecipes.find('.pager .next SafeAnchor a').simulate('click');
+          doImmediate(done, () => {
+            expect(paginationRecipes.find('.pager .previous')).toHaveLength(1);
+            expect(paginationRecipes.find('.pager .next')).toHaveLength(1);
+
+            expect(paginationRecipes.find(ListGroupItem).at(0).text()).toEqual("Page 2, Item 1");
+            expect(paginationRecipes.find(ListGroupItem).at(1).text()).toEqual("Page 2, Item 2");
+          });
+        });
+
+        it("last page should not have next button", (done) => {
+          paginationRecipes.find('.pager .next SafeAnchor a').simulate('click');
+          doImmediate(done, () => {
+            expect(paginationRecipes.find('.pager .previous')).toHaveLength(1);
+            expect(paginationRecipes.find('.pager .next')).toHaveLength(0);
+
+            expect(paginationRecipes.find(ListGroupItem).at(0).text()).toEqual("Page 3, Item 1");
+            expect(paginationRecipes.find(ListGroupItem).at(1).text()).toEqual("Page 3, Item 2");
+
+          });
+        });
+
+        it("previous button should load second page", (done) => {
+          paginationRecipes.find('.pager .previous SafeAnchor a').simulate('click');
+          doImmediate(done, () => {
+            expect(paginationRecipes.find('.pager .previous')).toHaveLength(1);
+            expect(paginationRecipes.find('.pager .next')).toHaveLength(1);
+
+            expect(paginationRecipes.find(ListGroupItem).at(0).text()).toEqual("Page 2, Item 1");
+            expect(paginationRecipes.find(ListGroupItem).at(1).text()).toEqual("Page 2, Item 2");
+          });
+        });
+
+        it("preivous button should load first page", (done) => {
+          paginationRecipes.find('.pager .previous SafeAnchor a').simulate('click');
+          doImmediate(done, () => {
+            expect(paginationRecipes.find('.pager .previous')).toHaveLength(0);
+            expect(paginationRecipes.find('.pager .next')).toHaveLength(1);
+
+            expect(paginationRecipes.find(ListGroupItem).at(0).text()).toEqual("Page 1, Item 1");
+            expect(paginationRecipes.find(ListGroupItem).at(1).text()).toEqual("Page 1, Item 2");
+          });
+        });
       });
     });
-
   });
 });
