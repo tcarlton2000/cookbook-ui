@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+  - "latest"
+
+cache:
+  directories:
+    - "node_modules"
+
+before_install:
+  - npm install
+
+stages:
+  - lint
+  - test
+
+jobs:
+  include:
+    - stage: lint
+      script: ./node_modules/.bin/eslint src/*.js
+    - stage: test
+      script: npm test
