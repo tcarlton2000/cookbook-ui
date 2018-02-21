@@ -1,9 +1,14 @@
 // @ts-check
 import React, { Component } from 'react'
+import PropTypes from 'prop-types';
 import { ListGroup, ListGroupItem, Pager } from 'react-bootstrap'
 
 export default class Recipes extends Component {
-  constructor (props) {
+  static propTypes = {
+    history: PropTypes.object
+  }
+
+  constructor(props) {
     super(props);
     this.state = {
       recipes: [
@@ -15,11 +20,11 @@ export default class Recipes extends Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.getRecipes('/recipes?start=0')
   }
 
-  getRecipes (link) {
+  getRecipes(link) {
     return fetch(link)
       .then((response) => response.json())
       .then((responseJson) => {
@@ -33,7 +38,7 @@ export default class Recipes extends Component {
       })
   }
 
-  previousButton () {
+  previousButton() {
     if (this.state.links.previous == null) {
       return <span></span>
     } else {
@@ -45,7 +50,7 @@ export default class Recipes extends Component {
     }
   }
 
-  nextButton () {
+  nextButton() {
     if (this.state.links.next == null) {
       return <span></span>
     } else {
@@ -57,21 +62,42 @@ export default class Recipes extends Component {
     }
   }
 
-  render () {
+  recipesView() {
     return (
       <div>
         <h1>Recipes</h1>
         <ListGroup>
           {this.state.recipes.map(
-            item => <ListGroupItem
-              key={item.id}>{item.name}
-            </ListGroupItem>)}
+            item =>
+              <ListGroupItem
+                onClick={() => {this.props.history.push(`/recipes/${item.id}`)}}
+                key={item.id}>{item.name}
+              </ListGroupItem>
+          )}
         </ListGroup>
         <Pager>
           {this.previousButton()}
           {this.nextButton()}
         </Pager>
       </div>
+    )
+  }
+
+  pageView() {
+    if (this.state.recipeId != null) {
+      return (
+        <div>
+          <a href="#" onClick={() => this.setState({recipeId: null})}>Back</a>
+        </div>
+      )
+    } else {
+      return this.recipesView()
+    }
+  }
+
+  render() {
+    return (
+      this.pageView()
     )
   }
 }

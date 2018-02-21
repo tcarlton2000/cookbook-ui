@@ -85,3 +85,47 @@ fetch('/recipes?start=2', {
     }
   }
 });
+
+fetch('/recipes/0', {
+  method: 'GET',
+  replyWith: {
+    status: 200,
+    body: JSON.stringify({
+      id: 0,
+      name: 'Page 1, Item 1',
+      ingredients: [
+        {
+          id: 0,
+          name: 'Pork',
+          amount: 2,
+          unit: 'lbs'
+        },
+        {
+          id: 1,
+          name: 'Salt',
+          amount: 0.5,
+          unit: 'tbls'
+        },
+        {
+          id: 2,
+          name: 'Something else',
+          amount: 5,
+          unit: 'count'
+        }
+      ],
+      steps: [
+        'Do this step first',
+        'Then do this step',
+        'Followed by this step',
+        "And finally, this step"
+      ],
+      nutrition: {
+        calories: 123,
+        carbs: 34,
+        protein: 12,
+        fat: 0,
+        cholestorol: 5
+      }
+    })
+  }
+})
