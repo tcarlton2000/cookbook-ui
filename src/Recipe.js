@@ -3,8 +3,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import './App.css'
 
-require('./mockResponses')
-
 export default class Recipe extends Component {
   static propTypes = {
     match: PropTypes.object
