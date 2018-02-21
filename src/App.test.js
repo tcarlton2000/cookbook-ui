@@ -2,6 +2,10 @@ import React from 'react'
 import { mount } from 'enzyme'
 import App from './App'
 import Recipes from './Recipes'
+import Recipe from './Recipe'
+import { Navbar, ListGroupItem } from 'react-bootstrap'
+import { doImmediate } from './testUtils'
+
 require('./mockResponses')
 
 describe('App', () => {
@@ -18,6 +22,7 @@ describe('App', () => {
 
   beforeEach(() => {
     mountedApp = undefined
+    app()
   })
 
   it('always returns a div', () => {
@@ -32,14 +37,26 @@ describe('App', () => {
       expect(wrappingDiv.children()).toEqual(app().children())
     })
 
-    it('contains only one child', () => {
+    it('contains two children', () => {
       const divs = app().find('div')
       const wrappingDiv = divs.first()
-      expect(wrappingDiv.children().length).toEqual(1)
+      expect(wrappingDiv.children().length).toEqual(2)
     })
 
     it('always renders a Recipes', () => {
       expect(app().find(Recipes).length).toBe(1)
+    })
+
+    it('always renders a Navbar', () => {
+      expect(app().find(Navbar).length).toBe(1)
+    })
+
+    it('should load a Recipe when one is clicked', (done) => {
+      app().find(ListGroupItem).at(0).simulate('click')
+      doImmediate(done, () => {
+        expect(app().find(Recipe).length).toBe(1)
+        expect(app().find(Recipes).length).toBe(0)
+      })
     })
   })
 })

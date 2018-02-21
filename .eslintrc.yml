@@ -18,3 +18,9 @@ globals:
 
 rules:
   no-console: off
+  indent:
+    - error
+    - 2
+  space-before-function-paren:
+    - error
+    - never
